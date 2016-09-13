@@ -1,0 +1,22 @@
+{
+  "name": "ready.io",
+  "version": "1.0.0",
+  "description": "Ready.io framework for Javascript",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ready-io/ready-js.git"
+  },
+  "keywords": [
+    "ready.io"
+  ],
+  "author": "Santiago Herrera Cardona <santiago.ready.io@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ready-io/ready-js/issues"
+  },
+  "homepage": "https://github.com/ready-io/ready-js#readme"
+}
