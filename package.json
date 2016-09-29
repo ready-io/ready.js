@@ -1,7 +1,7 @@
 {
   "name": "ready.io",
   "version": "1.0.3",
-  "description": "Ready.io Javasrcipt framework",
+  "description": "Ready.io Javascript framework",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
