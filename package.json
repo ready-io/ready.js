@@ -1,6 +1,6 @@
 {
   "name": "ready.io",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Ready.io Javasrcipt framework",
   "main": "index.js",
   "scripts": {
