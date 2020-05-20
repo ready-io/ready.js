@@ -1,6 +1,6 @@
 {
   "name": "ready.io",
-  "version": "1.0.4",
+  "version": "0.0.1",
   "description": "Ready.io Javascript framework",
   "main": "index.js",
   "scripts": {
@@ -13,10 +13,21 @@
   "keywords": [
     "ready.io"
   ],
-  "author": "Santiago Herrera Cardona <santiago.ready.io@gmail.com>",
+  "author": "hrcarsan@gmail.com",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/ready-io/ready.io-js/issues"
   },
-  "homepage": "https://github.com/ready-io/ready.io-js#readme"
+  "homepage": "https://github.com/ready-io/ready.io-js#readme",
+  "dependencies": {
+    "body-parser": "1.19.0",
+    "express": "4.17.1",
+    "moment": "^2.24.0",
+    "rxjs": "^6.5.5",
+    "socket.io": "2.3.0",
+    "socket.io-redis": "5.2.0",
+    "winston": "^3.2.1",
+    "winston-daily-rotate-file": "^4.4.2",
+    "got": "^10.7.0"
+  }
 }

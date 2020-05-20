@@ -1,4 +1,3 @@
-exports.printMsg = function() 
-{
-  console.log("This is a message from the demo package");
-}
+exports.HttpService   = require("./src/http.service");
+exports.LoggerService = require("./src/logger.service");
+exports.Module        = require("./src/module");
