@@ -20,7 +20,7 @@ class LoggerService
       maxFiles: '5d',
       utc: true,
       json: true,
-      level: 'info'
+      level: this.options.level || 'info'
     });
 
     this.logger = winston.createLogger({
