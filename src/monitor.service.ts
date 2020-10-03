@@ -1,8 +1,11 @@
 const CHECK_MEMORY_INTERVAL = 1000*60; // ms
 
-class MonitorService
+export default class MonitorService
 {
-  constructor(logger)
+  logger: any;
+
+
+  constructor(logger: any)
   {
     this.logger = logger;
   }

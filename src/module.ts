@@ -1,5 +1,10 @@
-class Module
+export default class Module
 {
+  protected services: any;
+  unhandledRejection: boolean;
+  exitOnError: boolean;
+
+
   constructor()
   {
     this.services           = {};
@@ -32,6 +37,15 @@ class Module
     process.on('SIGTERM', () => { this.onStop('SIGTERM'); process.exit(0); });
     process.on('SIGINT',  () => { this.onStop('SIGINT');  process.exit(0); });
   }
-}
 
-module.exports = Module;
+
+  onStop(_reason: any)
+  {
+
+  }
+
+  onError(_error: any)
+  {
+
+  }
+}

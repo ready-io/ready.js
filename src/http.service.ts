@@ -1,20 +1,34 @@
-const express    = require('express');
-const http       = require('http');
-const bodyParser = require('body-parser');
-const IO         = require('socket.io');
-const IORedis    = require('socket.io-redis');
-const got        = require('got');
+import express from 'express';
+import http from 'http';
+import bodyParser from 'body-parser';
+import IO from 'socket.io';
+import IORedis from 'socket.io-redis';
+import got from 'got';
+import LoggerService from './logger.service';
+import PromClient from 'prom-client';
+import {Subject} from 'rxjs';
 
 
-class HttpService
+export default class HttpService
 {
-  constructor(options, logger)
+  options: any;
+  logger: any;
+  express: any;
+  server: any;
+  deferred: any;
+  io: any;
+  prometheus: any;
+  protected metricsCollected = new Subject();
+
+
+  constructor(options: any, logger: LoggerService)
   {
     this.options  = options;
     this.logger   = logger;
     this.express  = express();
     this.server   = null;
     this.deferred = {};
+    this.prometheus = PromClient;
   }
 
 
@@ -27,9 +41,9 @@ class HttpService
     this.server.listen(this.options.port);
 
     // express configs
-    this.express.use(bodyParser.json());                         // support json encoded bodies
-    this.express.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
-    this.express.use((req, _res, next) =>                        // set params
+    this.express.use(bodyParser.json({ limit: '10mb' })); // support json encoded bodies
+    this.express.use(bodyParser.urlencoded({ extended: true, limit: '10mb' })); // support encoded bodies
+    this.express.use((req: any, _res: any, next: any) =>                        // set params
     {
       req.parsed = {params: {}};
 
@@ -39,7 +53,27 @@ class HttpService
       next();
     });
 
-    this.route("/ping", (res) => { res.send('pong'); });
+    this.route("/ping", (res: any) => { res.send('pong'); });
+
+    this.route("/metrics", async (res: any, params: any) =>
+    {
+      try
+      {
+        res.set('Content-Type', this.prometheus.register.contentType);
+        res.end(this.prometheus.register.metrics());
+
+        const collect = typeof(params.collect) != 'undefined'? +params.collect: 1;
+
+        if (collect)
+        {
+          this.metricsCollected.next();
+        }
+      }
+      catch (ex)
+      {
+        res.status(500).end(ex);
+      }
+    });
 
     log.info("HTTP server started");
 
@@ -64,7 +98,7 @@ class HttpService
   }
 
 
-  route(route, handler)
+  route(route: any, handler: any)
   {
     if (typeof(handler) == 'string')
     {
@@ -74,18 +108,18 @@ class HttpService
 
     if (Array.isArray(handler))
     {
-      var callback = (req, res) =>
+      var callback = (req: any, res: any) =>
       {
         handler[0][handler[1]](res, req.parsed.params, req);
       }
     }
-    else var callback = (req, res) => { handler(res, req.parsed.params, req); }
+    else var callback = (req: any, res: any) => { handler(res, req.parsed.params, req); }
 
     this.express.route(route).get(callback).post(callback);
   }
 
 
-  debounce(id, timeout, callback)
+  debounce(id: string, timeout: number, callback: () => {})
   {
     if (typeof(this.deferred[id]) != 'undefined') return;
 
@@ -97,20 +131,22 @@ class HttpService
   }
 
 
-  get(url, params)
+  get(url: string, params: any)
   {
-    let params_str = [];
+    let params_str = ""
 
     params.token = this.options.token;
 
     if (params)
     {
+      let params_arr = [];
+
       for (let name in params)
       {
-        params_str.push(`${name}=${params[name]}`);
+        params_arr.push(`${name}=${params[name]}`);
       }
 
-      params_str = params_str.length? "?"+params_str.join('&'): "";
+      params_str = params_arr.length? "?"+params_arr.join('&'): "";
     }
 
     const got_url = `http://${this.options.host}${url}${params_str}`;
@@ -119,7 +155,7 @@ class HttpService
   }
 
 
-  post(url, params)
+  post(url: string, params: any)
   {
     params.token = this.options.token;
 
@@ -128,6 +164,9 @@ class HttpService
     return got.post(url, {json: params}).json();
   }
 
-}
 
-module.exports = HttpService;
+  onMetricsCollected(callback: () => void)
+  {
+    this.metricsCollected.subscribe(callback);
+  }
+}
