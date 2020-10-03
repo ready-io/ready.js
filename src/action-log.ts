@@ -1,8 +1,15 @@
-const moment = require('moment')
+import moment from 'moment';
 
-class ActionLog
+export default class ActionLog
 {
-  constructor(logger, action = 'unknown')
+  logger: any;
+  timestamp: string;
+  action: string;
+  level: string;
+  message: string;
+
+
+  constructor(logger: any, action = 'unknown')
   {
     this.logger    = logger;
     this.timestamp = moment().format('x');
@@ -10,7 +17,7 @@ class ActionLog
   }
 
 
-  info(message)
+  info(message: string)
   {
     this.level    = 'info';
     this.message  = message;
@@ -18,7 +25,7 @@ class ActionLog
   }
 
 
-  debug(message)
+  debug(message: string)
   {
     this.level    = 'debug';
     this.message  = message;
@@ -26,7 +33,7 @@ class ActionLog
   }
 
 
-  error(message)
+  error(message: string)
   {
     this.level    = 'error';
     this.message  = message;
@@ -42,7 +49,7 @@ class ActionLog
       level: this.level,
       message: this.message,
       action: this.action,
-      duration: `${moment().format('x') - this.timestamp}ms`
+      duration: `${(+moment().format('x')) - (+this.timestamp)}ms`
     });
   }
 
@@ -52,5 +59,3 @@ class ActionLog
     return Math.round(process.memoryUsage().heapUsed/1024/1024*100)/100;
   }
 }
-
-module.exports = ActionLog;

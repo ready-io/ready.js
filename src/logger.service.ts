@@ -1,11 +1,14 @@
-const winston   = require('winston');
-const ActionLog = require('./action_log');
+import winston from 'winston';
+import ActionLog from './action-log';
+import 'winston-daily-rotate-file';
 
-require('winston-daily-rotate-file');
-
-class LoggerService
+export default class LoggerService
 {
-  constructor(options)
+  logger: any;
+  options: any;
+
+
+  constructor(options: any)
   {
     this.logger  = null;
     this.options = options;
@@ -31,10 +34,8 @@ class LoggerService
   }
 
 
-  action(name)
+  action(name: string)
   {
     return new ActionLog(this.logger, name);
   }
 }
-
-module.exports = LoggerService
