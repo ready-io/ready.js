@@ -1,9 +1,19 @@
-import HttpService from "./http.service";
-import LoggerService from "./logger.service";
+import HttpService, {HttpServiceOptions} from "./services/http.service";
+import LoggerService, {LoggerServiceOptions} from "./services/logger.service";
 import Module from "./module";
+import Service, {Inject} from "./services/service";
+import Controller from "./controller";
+import {Route} from "./decorators/route.decorator";
 
-export {
+export
+{
+  Module,
+  Service,
+  Inject,
   HttpService,
+  HttpServiceOptions,
   LoggerService,
-  Module
+  LoggerServiceOptions,
+  Controller,
+  Route,
 };
