@@ -31,24 +31,24 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.LoggerServiceOptions = void 0;
+exports.LoggerOptions = void 0;
 const winston_1 = __importDefault(require("winston"));
-const action_logger_service_1 = __importDefault(require("./action-logger.service"));
 require("winston-daily-rotate-file");
-const service_1 = __importStar(require("./service"));
-const monitor_service_1 = __importDefault(require("./monitor.service"));
-class LoggerServiceOptions {
+const service_1 = __importStar(require("../services/service"));
+class LoggerOptions {
     constructor() {
         this.dir = '';
         this.level = 'error';
     }
 }
-exports.LoggerServiceOptions = LoggerServiceOptions;
-let LoggerService = class LoggerService extends service_1.default {
-    constructor(monitor) {
+exports.LoggerOptions = LoggerOptions;
+let Logger = class Logger extends service_1.default {
+    constructor() {
         super();
-        this.monitor = monitor;
-        this.options = new LoggerServiceOptions();
+        this.options = new LoggerOptions();
+    }
+    static config(handler) {
+        return super.config(handler);
     }
     onInit() {
         this.winstonLogger = winston_1.default.createLogger();
@@ -73,16 +73,10 @@ let LoggerService = class LoggerService extends service_1.default {
     log(log) {
         this.winstonLogger.log(log);
     }
-    action(name) {
-        const actionLogger = new action_logger_service_1.default(this, this.monitor);
-        actionLogger.options.action = name;
-        actionLogger.init();
-        return actionLogger;
-    }
 };
-LoggerService = __decorate([
+Logger = __decorate([
     service_1.Inject(),
-    __metadata("design:paramtypes", [monitor_service_1.default])
-], LoggerService);
-exports.default = LoggerService;
-//# sourceMappingURL=logger.service.js.map
+    __metadata("design:paramtypes", [])
+], Logger);
+exports.default = Logger;
+//# sourceMappingURL=logger.js.map

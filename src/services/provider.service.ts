@@ -1,68 +1,128 @@
-export default class ProviderService
+import {injectDefinitions} from "../decorators/inject.decorator";
+import Service, {Inject} from "./service";
+import EmptyModule from "../empty-module";
+
+
+@Inject()
+export default class ProviderService extends Service
 {
-  static injectDefinitions = new Map<string, Array<string>>();
-  static moduleDeclarations = new Map<string, Map<string, any>>();
-
-  instances = new Map();
+  protected instances = new Map();
   declarations = new Map();
+  providers: Array<ProviderService> = [];
 
 
-  instance(className: string)
+  onInit()
   {
-    if (!className)
+    this.instances.set(ProviderService, this);
+  }
+
+
+  get<T=any>(Class: any): T
+  {
+    const injectDef = injectDefinitions.get(Class);
+    const singleton = injectDef.options.singleton
+
+    if (singleton)
     {
-      throw new Error('Class_name empty');
+      if (this.instances.has(Class))
+      {
+        return this.instances.get(Class);
+      }
     }
 
-    if (this.instances.has(className))
+    const instance = this.create(Class);
+
+    if (singleton)
     {
-      return this.instances.get(className);
+      this.instances.set(Class, instance)
     }
-
-    const dependenciesClasses = ProviderService.getDependenciesClasses(className);
-
-    if (dependenciesClasses.includes(className))
-    {
-      throw new Error(`Circular dependency found in ${className}`);
-    }
-
-    let paramTypes = ProviderService.injectDefinitions.get(className);
-    let params     = [];
-
-    for (let paramType of paramTypes)
-    {
-      params.push(this.instance(paramType));
-    }
-
-    const classDeclarations = this.declarations.get(className);
-    const Class = classDeclarations.Class;
-    const configHandler = classDeclarations.configHandler;
-
-    const instance: any = new Class(...params);
-
-    if (configHandler)
-    {
-      configHandler(instance.options);
-    }
-
-    this.instances.set(className, instance)
 
     return instance;
   }
 
 
-  static getDependenciesClasses(className: string, dependencies = new Map(), level = 0)
+  remove(Class: any): void
   {
-    if (dependencies.has(className)) return;
-
-    dependencies.set(className, []);
-
-    let paramTypes = this.injectDefinitions.get(className);
-
-    for (let paramType of paramTypes)
+    if (!this.instances.has(Class))
     {
-      dependencies.get(className).push(paramType);
+      return;
+    }
 
+    const instance = this.instances.get(Class);
+    instance.stop();
+
+    this.instances.delete(Class);
+  }
+
+
+  create(Class: any)
+  {
+    if (!Class)
+    {
+      throw new Error('Class empty');
+    }
+
+    const dependenciesClasses = this.getDependenciesClasses(Class);
+
+    if (dependenciesClasses.includes(Class))
+    {
+      throw new Error(`Circular dependency found in ${Class.name}`);
+    }
+
+    const classDeclarations = this.declarations.get(Class);
+
+    if (!classDeclarations)
+    {
+      for (let provider of this.providers)
+      {
+        try
+        {
+          return provider.get(Class);
+        }
+        catch (error) {}
+      }
+
+      throw new Error(`${Class.name} not declared`);
+    }
+
+    const injectDef = injectDefinitions.get(Class);
+    let params      = [];
+
+    for (let paramType of injectDef.paramTypes)
+    {
+      params.push(this.get(paramType));
+    }
+
+    const instance: any = new Class(...params);
+    const configHandler = classDeclarations.configHandler;
+
+    if (typeof(configHandler) === 'function')
+    {
+      configHandler(instance.options);
+    }
+
+    instance.init();
+
+    if (instance instanceof EmptyModule)
+    {
+      this.providers.push(instance.provider);
+    }
+
+    return instance;
+  }
+
+
+  getDependenciesClasses(Class: Function, dependencies = new Map(), level = 0)
+  {
+    if (dependencies.has(Class)) return;
+
+    dependencies.set(Class, []);
+
+    const injectDef = injectDefinitions.get(Class);
+
+    for (let paramType of injectDef.paramTypes)
+    {
+      dependencies.get(Class).push(paramType);
       this.getDependenciesClasses(paramType, dependencies, level+1);
     }
 

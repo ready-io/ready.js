@@ -4,13 +4,15 @@ import bodyParser from 'body-parser';
 import IO from 'socket.io';
 import IORedis from 'socket.io-redis';
 import got from 'got';
-import LoggerService from './logger.service';
+import LoggerService from '../logger/logger.service';
 import PromClient from 'prom-client';
 import {Subject} from 'rxjs';
-import Service, {Inject} from './service';
+import Service, {ConfigHandler, Inject} from './service';
+import RequestParams from '../request-params';
 
 
-type RouteHandler = ((res: Response, params: any, req: Request) => any) | Array<any> | string
+type RouteHandlerFun = (params: RequestParams, res: Response, req: Request) => any;
+type RouteHandler    = RouteHandlerFun | Array<any> | string;
 
 
 class SocketsServerOptions
@@ -45,6 +47,12 @@ export default class HttpService extends Service
   constructor(protected logger: LoggerService)
   {
     super();
+  }
+
+
+  static config(handler: ConfigHandler<HttpServiceOptions>)
+  {
+    return super.config(handler);
   }
 
 
@@ -88,9 +96,9 @@ export default class HttpService extends Service
       return 'pong';
     });
 
-    this.route("/metrics", (res, params) =>
+    this.route("/metrics", (params, res) =>
     {
-      try
+      /*try
       {
         const promRegister = PromClient.register;
 
@@ -109,7 +117,7 @@ export default class HttpService extends Service
         res.status(500).end(ex);
       }
 
-      return null;
+      return null;*/
     });
   }
 
@@ -148,7 +156,7 @@ export default class HttpService extends Service
 
   route(route: string, handler: RouteHandler)
   {
-    if (typeof(handler) == 'string')
+    if (typeof(handler) === 'string')
     {
       this.express.use(route, express.static(handler));
       return;
@@ -156,24 +164,61 @@ export default class HttpService extends Service
 
     const callback = async (req: any, res: Response) =>
     {
-      let result: string;
+      let response: any;
+      //const requestParams = new RequestParams(req.parsed.params);
+      const requestParams = req.parsed.params;
 
-      if (Array.isArray(handler))
+      try
       {
-        const controller = handler[0];
-        const method     = handler[1];
+        if (Array.isArray(handler))
+        {
+          const controller = handler[0];
+          const method     = handler[1];
 
-        result = await controller[method](res, req.parsed.params, req);
+
+          response = await controller[method](requestParams, res, req);
+        }
+        else
+        {
+          response = await handler(requestParams, res, req);
+        }
       }
-      else
+      catch (error)
       {
-        result = await handler(res, req.parsed.params, req);
+        response =
+        {
+          result: 'error',
+          error: error.message
+        };
       }
 
-      if (result !== null)
+      if (response === null)
       {
-        res.send(result);
+        return
       }
+
+      switch (typeof(response))
+      {
+        case 'object':
+        {
+          res.setHeader('Content-Type', 'application/json');
+
+          try
+          {
+            response = JSON.stringify(response);
+          }
+          catch (error)
+          {
+            response = "";
+          }
+
+          break;
+        }
+        case 'string': break;
+        default: response = "";
+      }
+
+      res.send(response);
     }
 
     this.express.route(route).get(callback).post(callback);

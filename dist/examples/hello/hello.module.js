@@ -7,10 +7,9 @@ const index_1 = require("../../src/index");
 const index_2 = require("../../src/index");
 const hello_controller_1 = __importDefault(require("./hello.controller"));
 class HelloModule extends index_1.Module {
-    constructor() {
-        super(...arguments);
-        this.declare = [
-            index_2.HttpService.config((options) => {
+    declare() {
+        return [
+            index_2.HttpService.config(options => {
                 options.port = 3000;
             }),
             hello_controller_1.default,

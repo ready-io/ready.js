@@ -2,11 +2,13 @@
 import { Express, Response } from 'express';
 import { Server } from 'http';
 import IO from 'socket.io';
-import LoggerService from './logger.service';
+import LoggerService from '../logger/logger.service';
 import PromClient from 'prom-client';
 import { Subject } from 'rxjs';
-import Service from './service';
-declare type RouteHandler = ((res: Response, params: any, req: Request) => any) | Array<any> | string;
+import Service, { ConfigHandler } from './service';
+import RequestParams from '../request-params';
+declare type RouteHandlerFun = (params: RequestParams, res: Response, req: Request) => any;
+declare type RouteHandler = RouteHandlerFun | Array<any> | string;
 declare class SocketsServerOptions {
     enabled: boolean;
     redisHost: string;
@@ -28,6 +30,7 @@ export default class HttpService extends Service {
     PromClient: typeof PromClient;
     protected metricsCollected: Subject<unknown>;
     constructor(logger: LoggerService);
+    static config(handler: ConfigHandler<HttpServiceOptions>): (typeof Service | ConfigHandler<any>)[];
     onInit(): void;
     setDefaultRoutes(): void;
     startSocketsServer(): void;

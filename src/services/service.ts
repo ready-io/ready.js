@@ -1,21 +1,17 @@
-import 'reflect-metadata'
 import {InjectDecorator} from '../decorators/inject.decorator';
 
 
 export const Inject = InjectDecorator;
+export type ConfigHandler<T> = (options: T) => void;
 
 
+@Inject()
 export default class Service
 {
   protected options: any;
 
 
-  constructor()
-  {
-  }
-
-
-  static config(handler: any)
+  static config(handler: ConfigHandler<any>)
   {
     return [this, handler];
   }

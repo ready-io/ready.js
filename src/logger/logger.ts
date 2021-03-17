@@ -1,8 +1,6 @@
-import winston, {Logger} from 'winston';
-import ActionLogger from './action-logger.service';
+import winston from 'winston';
 import 'winston-daily-rotate-file';
-import Service, {Inject} from './service';
-import MonitorService from './monitor.service';
+import Service, {ConfigHandler, Inject} from '../services/service';
 
 
 /**
@@ -28,7 +26,7 @@ export interface Log
 }
 
 
-export class LoggerServiceOptions
+export class LoggerOptions
 {
   dir: string = '';
   level: string = 'error';
@@ -36,15 +34,21 @@ export class LoggerServiceOptions
 
 
 @Inject()
-export default class LoggerService extends Service
+export default class Logger extends Service
 {
-  options = new LoggerServiceOptions();
-  protected winstonLogger: Logger;
+  options = new LoggerOptions();
+  protected winstonLogger: winston.Logger;
 
 
-  constructor(protected monitor: MonitorService)
+  constructor()
   {
     super();
+  }
+
+
+  static config(handler: ConfigHandler<LoggerOptions>)
+  {
+    return super.config(handler);
   }
 
 
@@ -79,15 +83,5 @@ export default class LoggerService extends Service
   log(log: Log)
   {
     this.winstonLogger.log(log);
-  }
-
-
-  action(name: string)
-  {
-    const actionLogger = new ActionLogger(this, this.monitor);
-    actionLogger.options.action = name;
-    actionLogger.init();
-
-    return actionLogger;
   }
 }

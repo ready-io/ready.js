@@ -1,19 +1,19 @@
 "use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.InjectDecorator = void 0;
+exports.InjectDecorator = exports.injectDefinitions = void 0;
 require("reflect-metadata");
-const provider_service_1 = __importDefault(require("../services/provider.service"));
-function InjectDecorator() {
+exports.injectDefinitions = new Map();
+function InjectDecorator(options = { singleton: true }) {
     return (constructor) => {
         const types = Reflect.getMetadata('design:paramtypes', constructor) || [];
         const paramTypes = [];
         for (let type of types) {
-            paramTypes.push(type.name);
+            if (typeof (type) !== 'function') {
+                throw new Error(`Unknown type of parameter for the constructor ${constructor.name}`);
+            }
+            paramTypes.push(type);
         }
-        provider_service_1.default.injectDefinitions.set(constructor.name, paramTypes);
+        exports.injectDefinitions.set(constructor, { paramTypes, options });
     };
 }
 exports.InjectDecorator = InjectDecorator;

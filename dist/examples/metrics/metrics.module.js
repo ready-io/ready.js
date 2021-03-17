@@ -5,16 +5,14 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const index_1 = require("../../src/index");
 const index_2 = require("../../src/index");
-const index_3 = require("../../src/index");
 const metrics_controller_1 = __importDefault(require("./metrics.controller"));
 class AppModule extends index_1.Module {
-    constructor() {
-        super(...arguments);
-        this.declare = [
-            index_2.LoggerService.config((options) => {
+    declare() {
+        return [
+            index_1.LoggerModule.config(options => {
                 options.level = 'debug';
             }),
-            index_3.HttpService.config((options) => {
+            index_2.HttpService.config(options => {
                 options.port = 3000;
             }),
             metrics_controller_1.default,

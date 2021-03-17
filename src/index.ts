@@ -1,9 +1,11 @@
-import HttpService, {HttpServiceOptions} from "./services/http.service";
-import LoggerService, {LoggerServiceOptions} from "./services/logger.service";
+import HttpService from "./services/http.service";
 import Module from "./module";
 import Service, {Inject} from "./services/service";
 import Controller from "./controller";
 import {Route} from "./decorators/route.decorator";
+import LoggerModule from "./logger/logger.module";
+import LoggerService from "./logger/logger.service";
+import RequestParams from "./request-params";
 
 export
 {
@@ -11,9 +13,10 @@ export
   Service,
   Inject,
   HttpService,
-  HttpServiceOptions,
+  RequestParams,
   LoggerService,
-  LoggerServiceOptions,
+  LoggerModule,
   Controller,
   Route,
 };
+

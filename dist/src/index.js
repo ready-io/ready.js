@@ -22,13 +22,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Route = exports.Controller = exports.LoggerServiceOptions = exports.LoggerService = exports.HttpServiceOptions = exports.HttpService = exports.Inject = exports.Service = exports.Module = void 0;
-const http_service_1 = __importStar(require("./services/http.service"));
+exports.Route = exports.Controller = exports.LoggerModule = exports.LoggerService = exports.RequestParams = exports.HttpService = exports.Inject = exports.Service = exports.Module = void 0;
+const http_service_1 = __importDefault(require("./services/http.service"));
 exports.HttpService = http_service_1.default;
-Object.defineProperty(exports, "HttpServiceOptions", { enumerable: true, get: function () { return http_service_1.HttpServiceOptions; } });
-const logger_service_1 = __importStar(require("./services/logger.service"));
-exports.LoggerService = logger_service_1.default;
-Object.defineProperty(exports, "LoggerServiceOptions", { enumerable: true, get: function () { return logger_service_1.LoggerServiceOptions; } });
 const module_1 = __importDefault(require("./module"));
 exports.Module = module_1.default;
 const service_1 = __importStar(require("./services/service"));
@@ -38,4 +34,10 @@ const controller_1 = __importDefault(require("./controller"));
 exports.Controller = controller_1.default;
 const route_decorator_1 = require("./decorators/route.decorator");
 Object.defineProperty(exports, "Route", { enumerable: true, get: function () { return route_decorator_1.Route; } });
+const logger_module_1 = __importDefault(require("./logger/logger.module"));
+exports.LoggerModule = logger_module_1.default;
+const logger_service_1 = __importDefault(require("./logger/logger.service"));
+exports.LoggerService = logger_service_1.default;
+const request_params_1 = __importDefault(require("./request-params"));
+exports.RequestParams = request_params_1.default;
 //# sourceMappingURL=index.js.map

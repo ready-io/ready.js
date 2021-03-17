@@ -1,23 +1,24 @@
-import {Module} from "../../src/index";
-import {LoggerService, LoggerServiceOptions} from "../../src/index";
-import {HttpService, HttpServiceOptions} from "../../src/index";
+import {LoggerModule, Module} from "../../src/index";
+import {HttpService} from "../../src/index";
 import MetricsController from "./metrics.controller";
 
 
 export default class AppModule extends Module
 {
-  declare =
-  [
-    LoggerService.config((options: LoggerServiceOptions) =>
-    {
-      options.level = 'debug';
-    }),
-    HttpService.config((options: HttpServiceOptions) =>
-    {
-      options.port = 3000;
-    }),
-    MetricsController,
-  ];
+  declare()
+  {
+    return [
+      LoggerModule.config(options =>
+      {
+        options.level = 'debug';
+      }),
+      HttpService.config(options =>
+      {
+        options.port = 3000;
+      }),
+      MetricsController,
+    ];
+  }
 
 
   onInit()

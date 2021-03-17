@@ -1,18 +1,26 @@
 import 'reflect-metadata'
-import ProviderService from '../services/provider.service';
 
-export function InjectDecorator()
+
+export const injectDefinitions = new Map<Function, any>();
+
+
+export function InjectDecorator(options = {singleton: true})
 {
   return (constructor: Function) =>
   {
     const types = Reflect.getMetadata('design:paramtypes', constructor) || [];
-    const paramTypes: Array<string> = [];
+    const paramTypes: Array<Function> = [];
 
     for (let type of types)
     {
-      paramTypes.push(type.name);
+      if (typeof(type) !== 'function')
+      {
+        throw new Error(`Unknown type of parameter for the constructor ${constructor.name}`);
+      }
+
+      paramTypes.push(type);
     }
 
-    ProviderService.injectDefinitions.set(constructor.name, paramTypes);
+    injectDefinitions.set(constructor, {paramTypes, options});
   };
 }

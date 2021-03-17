@@ -47,7 +47,7 @@ const body_parser_1 = __importDefault(require("body-parser"));
 const socket_io_1 = __importDefault(require("socket.io"));
 const socket_io_redis_1 = __importDefault(require("socket.io-redis"));
 const got_1 = __importDefault(require("got"));
-const logger_service_1 = __importDefault(require("./logger.service"));
+const logger_service_1 = __importDefault(require("../logger/logger.service"));
 const prom_client_1 = __importDefault(require("prom-client"));
 const rxjs_1 = require("rxjs");
 const service_1 = __importStar(require("./service"));
@@ -74,6 +74,9 @@ let HttpService = class HttpService extends service_1.default {
         this.deferred = {};
         this.PromClient = prom_client_1.default;
         this.metricsCollected = new rxjs_1.Subject();
+    }
+    static config(handler) {
+        return super.config(handler);
     }
     onInit() {
         const log = this.logger.action('HttpService.start');
@@ -105,20 +108,27 @@ let HttpService = class HttpService extends service_1.default {
         this.route("/ping", () => {
             return 'pong';
         });
-        this.route("/metrics", (res, params) => {
-            try {
-                const promRegister = prom_client_1.default.register;
-                res.set('Content-Type', promRegister.contentType);
-                res.end(promRegister.metrics());
-                const collect = typeof (params.collect) != 'undefined' ? +params.collect : 1;
-                if (collect) {
-                    this.metricsCollected.next();
-                }
+        this.route("/metrics", (params, res) => {
+            /*try
+            {
+              const promRegister = PromClient.register;
+      
+              res.set('Content-Type', promRegister.contentType);
+              res.end(promRegister.metrics());
+      
+              const collect = typeof(params.collect) != 'undefined'? +params.collect: 1;
+      
+              if (collect)
+              {
+                this.metricsCollected.next();
+              }
             }
-            catch (ex) {
-                res.status(500).end(ex);
+            catch (ex)
+            {
+              res.status(500).end(ex);
             }
-            return null;
+      
+            return null;*/
         });
     }
     startSocketsServer() {
@@ -141,23 +151,50 @@ let HttpService = class HttpService extends service_1.default {
         log.info("HTTP server stopped");
     }
     route(route, handler) {
-        if (typeof (handler) == 'string') {
+        if (typeof (handler) === 'string') {
             this.express.use(route, express_1.default.static(handler));
             return;
         }
         const callback = (req, res) => __awaiter(this, void 0, void 0, function* () {
-            let result;
-            if (Array.isArray(handler)) {
-                const controller = handler[0];
-                const method = handler[1];
-                result = yield controller[method](res, req.parsed.params, req);
+            let response;
+            //const requestParams = new RequestParams(req.parsed.params);
+            const requestParams = req.parsed.params;
+            try {
+                if (Array.isArray(handler)) {
+                    const controller = handler[0];
+                    const method = handler[1];
+                    response = yield controller[method](requestParams, res, req);
+                }
+                else {
+                    response = yield handler(requestParams, res, req);
+                }
             }
-            else {
-                result = yield handler(res, req.parsed.params, req);
+            catch (error) {
+                response =
+                    {
+                        result: 'error',
+                        error: error.message
+                    };
             }
-            if (result !== null) {
-                res.send(result);
+            if (response === null) {
+                return;
             }
+            switch (typeof (response)) {
+                case 'object':
+                    {
+                        res.setHeader('Content-Type', 'application/json');
+                        try {
+                            response = JSON.stringify(response);
+                        }
+                        catch (error) {
+                            response = "";
+                        }
+                        break;
+                    }
+                case 'string': break;
+                default: response = "";
+            }
+            res.send(response);
         });
         this.express.route(route).get(callback).post(callback);
     }

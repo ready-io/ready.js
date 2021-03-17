@@ -1,8 +1,11 @@
-export default class ProviderService {
-    static injectDefinitions: Map<string, string[]>;
-    static moduleDeclarations: Map<string, Map<string, any>>;
-    instances: Map<any, any>;
+import Service from "./service";
+export default class ProviderService extends Service {
+    protected instances: Map<any, any>;
     declarations: Map<any, any>;
-    instance(className: string): any;
-    static getDependenciesClasses(className: string, dependencies?: Map<any, any>, level?: number): string[];
+    providers: Array<ProviderService>;
+    onInit(): void;
+    get<T = any>(Class: any): T;
+    remove(Class: any): void;
+    create(Class: any): any;
+    getDependenciesClasses(Class: Function, dependencies?: Map<any, any>, level?: number): string[];
 }
