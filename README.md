@@ -1,6 +1,7 @@
-# Ready.io - server.js
+<img src="logo.png" alt="logo" />
 
-<img src="logo.png" alt="logo" />*Framework for agile development*
+# Ready.io - server.js
+*Framework for agile development*
 
 ### Motivation
 
