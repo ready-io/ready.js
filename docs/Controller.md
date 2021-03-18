@@ -6,27 +6,19 @@
 import {Controller} from '@ready.io/server';
 ```
 
-
-
 ### Concept
 
 The controllers in the APP are the interface between all the the APP logic and anything outside, services, APIs, resources, clients, etc. This is why the controllers are used with the @Route decorator to handle all the  HTTP requests
 
-
-
 ### Properties
 
 N/A
-
-
 
 ### Methods
 
 **onInit()**
 
 Called when the controller is initialized
-
-
 
 ### Examples
 
