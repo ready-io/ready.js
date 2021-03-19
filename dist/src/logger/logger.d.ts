@@ -1,6 +1,6 @@
 import winston from 'winston';
 import 'winston-daily-rotate-file';
-import Service, { ConfigHandler } from '../services/service';
+import { Service, ConfigHandler } from '../services/service';
 /**
  * log levels
  * {
@@ -25,7 +25,7 @@ export declare class LoggerOptions {
     dir: string;
     level: string;
 }
-export default class Logger extends Service {
+export declare class Logger extends Service {
     options: LoggerOptions;
     protected winstonLogger: winston.Logger;
     constructor();

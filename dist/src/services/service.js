@@ -6,7 +6,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Inject = void 0;
+exports.Service = exports.Inject = void 0;
 const inject_decorator_1 = require("../decorators/inject.decorator");
 exports.Inject = inject_decorator_1.InjectDecorator;
 let Service = class Service {
@@ -27,5 +27,5 @@ let Service = class Service {
 Service = __decorate([
     exports.Inject()
 ], Service);
-exports.default = Service;
+exports.Service = Service;
 //# sourceMappingURL=service.js.map

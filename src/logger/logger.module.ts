@@ -1,9 +1,9 @@
 import {ConfigHandler, Inject} from "../services/service";
-import Logger from "./logger";
-import ActionLogger from "./action-logger.service";
-import LoggerService from "./logger.service";
-import EmptyModule from "../empty-module";
-import MonitorService from "../services/monitor.service";
+import {Logger} from "./logger";
+import {ActionLogger} from "./action-logger.service";
+import {LoggerService} from "./logger.service";
+import {EmptyModule} from "../empty-module";
+import {MonitorService} from "../services/monitor.service";
 
 export class Options
 {
@@ -13,7 +13,7 @@ export class Options
 
 
 @Inject()
-export default class LoggerModule extends EmptyModule
+export class LoggerModule extends EmptyModule
 {
   options = new Options();
 

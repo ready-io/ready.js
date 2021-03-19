@@ -1,5 +1,5 @@
-import Service from "./service";
-export default class ProviderService extends Service {
+import { Service } from "./service";
+export declare class ProviderService extends Service {
     protected instances: Map<any, any>;
     declarations: Map<any, any>;
     providers: Array<ProviderService>;

@@ -1,28 +1,9 @@
 "use strict";
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
 };
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
@@ -40,17 +21,17 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.HttpServiceOptions = void 0;
+exports.HttpService = exports.HttpServiceOptions = void 0;
 const express_1 = __importDefault(require("express"));
 const http_1 = __importDefault(require("http"));
 const body_parser_1 = __importDefault(require("body-parser"));
 const socket_io_1 = __importDefault(require("socket.io"));
 const socket_io_redis_1 = __importDefault(require("socket.io-redis"));
 const got_1 = __importDefault(require("got"));
-const logger_service_1 = __importDefault(require("../logger/logger.service"));
+const logger_service_1 = require("../logger/logger.service");
 const prom_client_1 = __importDefault(require("prom-client"));
 const rxjs_1 = require("rxjs");
-const service_1 = __importStar(require("./service"));
+const service_1 = require("./service");
 class SocketsServerOptions {
     constructor() {
         this.enabled = false;
@@ -65,7 +46,7 @@ class HttpServiceOptions {
     }
 }
 exports.HttpServiceOptions = HttpServiceOptions;
-let HttpService = class HttpService extends service_1.default {
+let HttpService = class HttpService extends service_1.Service {
     constructor(logger) {
         super();
         this.logger = logger;
@@ -109,26 +90,19 @@ let HttpService = class HttpService extends service_1.default {
             return 'pong';
         });
         this.route("/metrics", (params, res) => {
-            /*try
-            {
-              const promRegister = PromClient.register;
-      
-              res.set('Content-Type', promRegister.contentType);
-              res.end(promRegister.metrics());
-      
-              const collect = typeof(params.collect) != 'undefined'? +params.collect: 1;
-      
-              if (collect)
-              {
-                this.metricsCollected.next();
-              }
+            try {
+                const promRegister = prom_client_1.default.register;
+                res.set('Content-Type', promRegister.contentType);
+                res.end(promRegister.metrics());
+                const collect = typeof (params.collect) != 'undefined' ? +params.collect : 1;
+                if (collect) {
+                    this.metricsCollected.next();
+                }
             }
-            catch (ex)
-            {
-              res.status(500).end(ex);
+            catch (ex) {
+                res.status(500).end(ex);
             }
-      
-            return null;*/
+            return null;
         });
     }
     startSocketsServer() {
@@ -230,7 +204,7 @@ let HttpService = class HttpService extends service_1.default {
 };
 HttpService = __decorate([
     service_1.Inject(),
-    __metadata("design:paramtypes", [logger_service_1.default])
+    __metadata("design:paramtypes", [logger_service_1.LoggerService])
 ], HttpService);
-exports.default = HttpService;
+exports.HttpService = HttpService;
 //# sourceMappingURL=http.service.js.map

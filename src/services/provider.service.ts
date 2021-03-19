@@ -1,10 +1,10 @@
 import {injectDefinitions} from "../decorators/inject.decorator";
-import Service, {Inject} from "./service";
-import EmptyModule from "../empty-module";
+import {Service, Inject} from "./service";
+import {EmptyModule} from "../empty-module";
 
 
 @Inject()
-export default class ProviderService extends Service
+export class ProviderService extends Service
 {
   protected instances = new Map();
   declarations = new Map();

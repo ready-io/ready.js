@@ -1,9 +1,9 @@
 import {controllersRoutes} from "./decorators/route.decorator";
-import HttpService from "./services/http.service";
-import Service, {Inject} from "./services/service";
+import {HttpService} from "./services/http.service";
+import {Service, Inject} from "./services/service";
 
 @Inject()
-export default class Controller extends Service
+export class Controller extends Service
 {
   constructor(public http: HttpService)
   {

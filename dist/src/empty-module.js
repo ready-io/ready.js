@@ -1,17 +1,15 @@
 "use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.EmptyModule = void 0;
 const inject_decorator_1 = require("./decorators/inject.decorator");
-const service_1 = __importDefault(require("./services/service"));
-const provider_service_1 = __importDefault(require("./services/provider.service"));
-class EmptyModule extends service_1.default {
+const service_1 = require("./services/service");
+const provider_service_1 = require("./services/provider.service");
+class EmptyModule extends service_1.Service {
     constructor() {
         super(...arguments);
         this.unhandledRejection = false;
         this.exitOnError = false;
-        this.provider = new provider_service_1.default();
+        this.provider = new provider_service_1.ProviderService();
         this.stopped = false;
         this.userDeclarations = [];
         this.declareDefault = [];
@@ -100,5 +98,5 @@ class EmptyModule extends service_1.default {
     onError(_error) {
     }
 }
-exports.default = EmptyModule;
+exports.EmptyModule = EmptyModule;
 //# sourceMappingURL=empty-module.js.map

@@ -1,7 +1,7 @@
 import mysql, {Connection} from 'mysql';
 import {SECONDS} from '../util';
-import LoggerService from '../logger/logger.service';
-import Service, {ConfigHandler, Inject} from './service';
+import {LoggerService} from '../logger/logger.service';
+import {Service, ConfigHandler, Inject} from './service';
 
 
 const RECONNECTION_TIME = 5*SECONDS;
@@ -17,7 +17,7 @@ export class MysqlServiceOptions
 
 
 @Inject()
-export default class MysqlService extends Service
+export class MysqlService extends Service
 {
   options = new MysqlServiceOptions();
   connection: Connection;

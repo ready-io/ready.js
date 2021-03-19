@@ -2,12 +2,11 @@
 import { Express, Response } from 'express';
 import { Server } from 'http';
 import IO from 'socket.io';
-import LoggerService from '../logger/logger.service';
+import { LoggerService } from '../logger/logger.service';
 import PromClient from 'prom-client';
 import { Subject } from 'rxjs';
-import Service, { ConfigHandler } from './service';
-import RequestParams from '../request-params';
-declare type RouteHandlerFun = (params: RequestParams, res: Response, req: Request) => any;
+import { Service, ConfigHandler } from './service';
+declare type RouteHandlerFun = (params: any, res: Response, req: Request) => any;
 declare type RouteHandler = RouteHandlerFun | Array<any> | string;
 declare class SocketsServerOptions {
     enabled: boolean;
@@ -20,7 +19,7 @@ export declare class HttpServiceOptions {
     token: string;
     host: string;
 }
-export default class HttpService extends Service {
+export declare class HttpService extends Service {
     protected logger: LoggerService;
     options: HttpServiceOptions;
     express: Express;

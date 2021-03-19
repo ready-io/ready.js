@@ -4,14 +4,13 @@ import bodyParser from 'body-parser';
 import IO from 'socket.io';
 import IORedis from 'socket.io-redis';
 import got from 'got';
-import LoggerService from '../logger/logger.service';
+import {LoggerService} from '../logger/logger.service';
 import PromClient from 'prom-client';
 import {Subject} from 'rxjs';
-import Service, {ConfigHandler, Inject} from './service';
-import RequestParams from '../request-params';
+import {Service, ConfigHandler, Inject} from './service';
 
 
-type RouteHandlerFun = (params: RequestParams, res: Response, req: Request) => any;
+type RouteHandlerFun = (params: any, res: Response, req: Request) => any;
 type RouteHandler    = RouteHandlerFun | Array<any> | string;
 
 
@@ -33,7 +32,7 @@ export class HttpServiceOptions
 
 
 @Inject()
-export default class HttpService extends Service
+export class HttpService extends Service
 {
   options = new HttpServiceOptions;
   express: Express;
@@ -98,7 +97,7 @@ export default class HttpService extends Service
 
     this.route("/metrics", (params, res) =>
     {
-      /*try
+      try
       {
         const promRegister = PromClient.register;
 
@@ -117,7 +116,7 @@ export default class HttpService extends Service
         res.status(500).end(ex);
       }
 
-      return null;*/
+      return null;
     });
   }
 

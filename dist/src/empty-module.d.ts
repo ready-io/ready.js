@@ -1,6 +1,6 @@
-import Service from './services/service';
-import ProviderService from './services/provider.service';
-export default class EmptyModule extends Service {
+import { Service } from './services/service';
+import { ProviderService } from './services/provider.service';
+export declare class EmptyModule extends Service {
     unhandledRejection: boolean;
     exitOnError: boolean;
     provider: ProviderService;

@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.RequestParams = void 0;
 class RequestParams {
     constructor(rawParams) {
         this.rawParams = rawParams;
@@ -17,5 +18,5 @@ class RequestParams {
         return this.rawParams[name];
     }
 }
-exports.default = RequestParams;
+exports.RequestParams = RequestParams;
 //# sourceMappingURL=request-params.js.map

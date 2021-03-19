@@ -1,4 +1,4 @@
-export default class RequestParams
+export class RequestParams
 {
   constructor(public rawParams: any)
   {

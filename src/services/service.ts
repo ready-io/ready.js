@@ -6,7 +6,7 @@ export type ConfigHandler<T> = (options: T) => void;
 
 
 @Inject()
-export default class Service
+export class Service
 {
   protected options: any;
 

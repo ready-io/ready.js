@@ -1,7 +1,7 @@
-import Service, {Inject} from "./service";
+import {Service, Inject} from "./service";
 
 @Inject()
-export default class MonitorService extends Service
+export class MonitorService extends Service
 {
   /**
    * It returns the memory usage in MB

@@ -1,10 +1,10 @@
-import ActionLogger from './action-logger.service';
-import ProviderService from '../services/provider.service';
-import Service, {Inject} from '../services/service';
+import {ActionLogger} from './action-logger.service';
+import {ProviderService} from '../services/provider.service';
+import {Service, Inject} from '../services/service';
 
 
 @Inject()
-export default class LoggerService extends Service
+export class LoggerService extends Service
 {
 
   constructor(protected provider: ProviderService)

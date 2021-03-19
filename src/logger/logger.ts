@@ -1,6 +1,6 @@
 import winston from 'winston';
 import 'winston-daily-rotate-file';
-import Service, {ConfigHandler, Inject} from '../services/service';
+import {Service, ConfigHandler, Inject} from '../services/service';
 
 
 /**
@@ -34,7 +34,7 @@ export class LoggerOptions
 
 
 @Inject()
-export default class Logger extends Service
+export class Logger extends Service
 {
   options = new LoggerOptions();
   protected winstonLogger: winston.Logger;

@@ -13,11 +13,11 @@ export function sleep(ms: number)
 }
 
 
-export function untilEquals(value: any, fun: () => boolean, timeout: number = 5000): Promise<boolean>
+export function untilCondition(fun: () => boolean, timeout: number = 5000): Promise<boolean>
 {
   return new Promise((resolve, reject) =>
   {
-    if (fun() === value)
+    if (fun())
     {
       resolve(true);
       return;
@@ -28,7 +28,7 @@ export function untilEquals(value: any, fun: () => boolean, timeout: number = 50
 
     intervalId = setInterval(() =>
     {
-      if (fun() === value)
+      if (fun())
       {
         clearTimeout(timeoutId);
         clearInterval(intervalId);
@@ -48,13 +48,25 @@ export function untilEquals(value: any, fun: () => boolean, timeout: number = 50
 }
 
 
-export function untilTrue(fun: () => boolean, timeout: number = 5000): Promise<boolean>
+export function untilEquals(value: any, fun: () => boolean, timeout: number = 5000)
+{
+  return untilCondition(() => fun() === value, timeout);
+}
+
+
+export function untilNotEquals(value: any, fun: () => boolean, timeout: number = 5000)
+{
+  return untilCondition(() => fun() !== value, timeout);
+}
+
+
+export function untilTrue(fun: () => boolean, timeout: number = 5000)
 {
   return untilEquals(true, fun, timeout);
 }
 
 
-export function untilNotNull(fun: () => any, timeout: number = 5000): Promise<boolean>
+export function untilNotNull(fun: () => any, timeout: number = 5000)
 {
-  return untilEquals(true, () => fun() !== null, timeout);
+  return untilNotEquals(null, fun, timeout);
 }

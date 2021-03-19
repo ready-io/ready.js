@@ -1,4 +1,4 @@
-export default class RequestParams {
+export declare class RequestParams {
     rawParams: any;
     constructor(rawParams: any);
     require(name: string, type: string): any;

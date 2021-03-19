@@ -1,11 +1,11 @@
-import Logger from './logger';
-import MonitorService from '../services/monitor.service';
-import Service, { ConfigHandler } from '../services/service';
+import { Logger } from './logger';
+import { MonitorService } from '../services/monitor.service';
+import { Service, ConfigHandler } from '../services/service';
 export declare class ActionLoggerOptions {
     timestamp: string;
     action: string;
 }
-export default class ActionLogger extends Service {
+export declare class ActionLogger extends Service {
     protected logger: Logger;
     protected monitor: MonitorService;
     options: ActionLoggerOptions;

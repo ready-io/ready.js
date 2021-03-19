@@ -1,7 +1,7 @@
 import moment from 'moment';
-import Logger from './logger';
-import MonitorService from '../services/monitor.service';
-import Service, {ConfigHandler, Inject} from '../services/service';
+import {Logger} from './logger';
+import {MonitorService} from '../services/monitor.service';
+import {Service, ConfigHandler, Inject} from '../services/service';
 
 
 export class ActionLoggerOptions
@@ -12,7 +12,7 @@ export class ActionLoggerOptions
 
 
 @Inject({singleton: false})
-export default class ActionLogger extends Service
+export class ActionLogger extends Service
 {
   options = new ActionLoggerOptions();
 

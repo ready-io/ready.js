@@ -1,22 +1,20 @@
 "use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-const logger_service_1 = __importDefault(require("./logger/logger.service"));
-const empty_module_1 = __importDefault(require("./empty-module"));
-const logger_module_1 = __importDefault(require("./logger/logger.module"));
-class Module extends empty_module_1.default {
+exports.Module = void 0;
+const logger_service_1 = require("./logger/logger.service");
+const empty_module_1 = require("./empty-module");
+const logger_module_1 = require("./logger/logger.module");
+class Module extends empty_module_1.EmptyModule {
     constructor() {
         super(...arguments);
         this.declareDefault = [
-            logger_module_1.default,
+            logger_module_1.LoggerModule,
         ];
     }
     initSingletons() {
         super.initSingletons();
-        this.logger = this.provider.get(logger_service_1.default);
+        this.logger = this.provider.get(logger_service_1.LoggerService);
     }
 }
-exports.default = Module;
+exports.Module = Module;
 //# sourceMappingURL=module.js.map

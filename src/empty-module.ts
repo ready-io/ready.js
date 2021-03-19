@@ -1,9 +1,9 @@
 import {injectDefinitions} from './decorators/inject.decorator';
-import Service from './services/service';
-import ProviderService from './services/provider.service';
+import {Service} from './services/service';
+import {ProviderService} from './services/provider.service';
 
 
-export default class EmptyModule extends Service
+export class EmptyModule extends Service
 {
   unhandledRejection: boolean = false;
   exitOnError: boolean = false;
