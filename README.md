@@ -96,4 +96,4 @@ Check the [documentation](docs) and the [examples](examples) to learn more and s
 
 ### License
 
-Copyright &copy; 2020-present [Santiago](mailto:hrcarsan@gmail.com), licensed under the [MIT License](LICENSE).
+Copyright &copy; 2020-present [Santiago](https://github.com/hrcarsan), licensed under the [MIT License](LICENSE).
