@@ -5,11 +5,11 @@
 
 ### Motivation
 
-For some time I have had the idea of start this project mainly because I can and have the time to do it, but also because I have felt led to it. In my day to day as a web developer, I want to have a solid and general structure in all my projects, follow well-defined patterns and best practices, and have a base that has everything I need to can focus only in the applications logic forgetting all the trivial. Ready.io will be made for help with this, and I hope it also can help anyone else.
+For some time I have had the idea of start this project mainly because I can and have the time to do it, but also because I have felt led to it. In my day to day as a web developer, I want to have a solid and general structure in all my projects, follow well-defined patterns and best practices, and have a base that has everything I need to can focus only on the applications logic forgetting all the trivial. Ready.io will be made for help with this, and I hope it also can help anyone else.
 
 ### Disclaimer
 
-I am giving the first steps so there is not much to see here yet. I have a lot of ideas and things to learn and I have to decide what implement first, I also could decide to totally change anything from a version to another, so all can be very unstable for now.
+The framework is in early phases, and as I have a lot of ideas and things to learn I am not sure what to implement first and I could decide to change anything from a version to another, all can be very unstable for now.
 
 ### Install
 
