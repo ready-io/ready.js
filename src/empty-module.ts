@@ -1,6 +1,6 @@
-import {injectDefinitions} from './decorators/inject.decorator';
 import {Service} from './services/service';
 import {ProviderService} from './services/provider.service';
+import {injectDefinitions} from './decorators/inject.decorator';
 
 
 export class EmptyModule extends Service
@@ -11,13 +11,14 @@ export class EmptyModule extends Service
   stopped = false;
   userDeclarations: Array<any> = [];
   declareDefault: Array<any> = [];
+  static injectDefinitions = injectDefinitions;
 
 
-  init()
+  async init()
   {
     this.setUserDeclarations();
     this.handleShutdown();
-    this.initSingletons();
+    await this.initSingletons();
     this.onInit();
   }
 
@@ -46,14 +47,9 @@ export class EmptyModule extends Service
       userDeclaration = [userDeclaration];
     }
 
-    const Class     = userDeclaration[0];
-    const injectDef = injectDefinitions.get(Class);
-    const singleton = injectDef.options.singleton
-
     return {
       Class: userDeclaration[0],
       configHandler: userDeclaration[1],
-      singleton: singleton,
     };
   }
 
@@ -80,16 +76,18 @@ export class EmptyModule extends Service
   }
 
 
-  initSingletons()
+  async initSingletons()
   {
     this.provider.declarations = this.getDeclarations();
     this.provider.init();
 
-    for (let [Class, declaration] of this.provider.declarations)
+    for (let [Class] of this.provider.declarations)
     {
-      if (declaration.singleton)
+      const instance = this.provider.add(Class);
+
+      if (instance)
       {
-        this.provider.get(Class);
+        await instance.init();
       }
     }
   }
@@ -107,12 +105,9 @@ export class EmptyModule extends Service
 
   stopSingletons()
   {
-    for (let [Class, declaration] of this.provider.declarations)
+    for (let [Class] of this.provider.declarations)
     {
-      if (declaration.singleton)
-      {
-        this.provider.remove(Class);
-      }
+      this.provider.remove(Class);
     }
   }
 
@@ -122,6 +117,7 @@ export class EmptyModule extends Service
     process.on('unhandledRejection', e => { this.unhandledRejection = true; throw e; });
     process.on('uncaughtException',  e =>
     {
+      console.log(e);
       this.onError(e);
       this.exitOnError = true;
 

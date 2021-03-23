@@ -1,9 +1,18 @@
 "use strict";
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.EmptyModule = void 0;
-const inject_decorator_1 = require("./decorators/inject.decorator");
 const service_1 = require("./services/service");
 const provider_service_1 = require("./services/provider.service");
+const inject_decorator_1 = require("./decorators/inject.decorator");
 class EmptyModule extends service_1.Service {
     constructor() {
         super(...arguments);
@@ -15,10 +24,12 @@ class EmptyModule extends service_1.Service {
         this.declareDefault = [];
     }
     init() {
-        this.setUserDeclarations();
-        this.handleShutdown();
-        this.initSingletons();
-        this.onInit();
+        return __awaiter(this, void 0, void 0, function* () {
+            this.setUserDeclarations();
+            this.handleShutdown();
+            yield this.initSingletons();
+            this.onInit();
+        });
     }
     onInit() {
     }
@@ -32,13 +43,9 @@ class EmptyModule extends service_1.Service {
         if (!Array.isArray(userDeclaration)) {
             userDeclaration = [userDeclaration];
         }
-        const Class = userDeclaration[0];
-        const injectDef = inject_decorator_1.injectDefinitions.get(Class);
-        const singleton = injectDef.options.singleton;
         return {
             Class: userDeclaration[0],
             configHandler: userDeclaration[1],
-            singleton: singleton,
         };
     }
     getDeclarations() {
@@ -54,13 +61,16 @@ class EmptyModule extends service_1.Service {
         return declarations;
     }
     initSingletons() {
-        this.provider.declarations = this.getDeclarations();
-        this.provider.init();
-        for (let [Class, declaration] of this.provider.declarations) {
-            if (declaration.singleton) {
-                this.provider.get(Class);
+        return __awaiter(this, void 0, void 0, function* () {
+            this.provider.declarations = this.getDeclarations();
+            this.provider.init();
+            for (let [Class] of this.provider.declarations) {
+                const instance = this.provider.add(Class);
+                if (instance) {
+                    yield instance.init();
+                }
             }
-        }
+        });
     }
     stop(reason = 'stop called') {
         if (this.stopped)
@@ -70,15 +80,14 @@ class EmptyModule extends service_1.Service {
         this.onStop(reason);
     }
     stopSingletons() {
-        for (let [Class, declaration] of this.provider.declarations) {
-            if (declaration.singleton) {
-                this.provider.remove(Class);
-            }
+        for (let [Class] of this.provider.declarations) {
+            this.provider.remove(Class);
         }
     }
     handleShutdown() {
         process.on('unhandledRejection', e => { this.unhandledRejection = true; throw e; });
         process.on('uncaughtException', e => {
+            console.log(e);
             this.onError(e);
             this.exitOnError = true;
             if (this.unhandledRejection)
@@ -99,4 +108,5 @@ class EmptyModule extends service_1.Service {
     }
 }
 exports.EmptyModule = EmptyModule;
+EmptyModule.injectDefinitions = inject_decorator_1.injectDefinitions;
 //# sourceMappingURL=empty-module.js.map

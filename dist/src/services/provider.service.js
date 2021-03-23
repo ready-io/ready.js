@@ -10,19 +10,38 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.ProviderService = void 0;
 const inject_decorator_1 = require("../decorators/inject.decorator");
 const service_1 = require("./service");
-const empty_module_1 = require("../empty-module");
 let ProviderService = ProviderService_1 = class ProviderService extends service_1.Service {
     constructor() {
         super(...arguments);
         this.instances = new Map();
         this.declarations = new Map();
         this.providers = [];
+        this.injectDefinitions = [inject_decorator_1.injectDefinitions];
     }
     onInit() {
         this.instances.set(ProviderService_1, this);
     }
+    getInjectDefinitions(Class) {
+        for (let injectDefinitions of this.injectDefinitions) {
+            const injectDef = injectDefinitions.get(Class);
+            if (injectDef) {
+                return injectDef;
+            }
+        }
+        throw new Error(`Inject definitions not found for ${Class.name}`);
+    }
+    add(Class) {
+        if (Class.injectDefinitions) {
+            this.injectDefinitions.push(Class.injectDefinitions);
+        }
+        const injectDef = this.getInjectDefinitions(Class);
+        const singleton = injectDef.options.singleton;
+        if (singleton) {
+            return this.get(Class);
+        }
+    }
     get(Class) {
-        const injectDef = inject_decorator_1.injectDefinitions.get(Class);
+        const injectDef = this.getInjectDefinitions(Class);
         const singleton = injectDef.options.singleton;
         if (singleton) {
             if (this.instances.has(Class)) {
@@ -41,7 +60,6 @@ let ProviderService = ProviderService_1 = class ProviderService extends service_
         }
         const instance = this.instances.get(Class);
         instance.stop();
-        this.instances.delete(Class);
     }
     create(Class) {
         if (!Class) {
@@ -61,7 +79,7 @@ let ProviderService = ProviderService_1 = class ProviderService extends service_
             }
             throw new Error(`${Class.name} not declared`);
         }
-        const injectDef = inject_decorator_1.injectDefinitions.get(Class);
+        const injectDef = this.getInjectDefinitions(Class);
         let params = [];
         for (let paramType of injectDef.paramTypes) {
             params.push(this.get(paramType));
@@ -71,8 +89,7 @@ let ProviderService = ProviderService_1 = class ProviderService extends service_
         if (typeof (configHandler) === 'function') {
             configHandler(instance.options);
         }
-        instance.init();
-        if (instance instanceof empty_module_1.EmptyModule) {
+        if (Class.injectDefinitions) {
             this.providers.push(instance.provider);
         }
         return instance;
@@ -81,7 +98,7 @@ let ProviderService = ProviderService_1 = class ProviderService extends service_
         if (dependencies.has(Class))
             return;
         dependencies.set(Class, []);
-        const injectDef = inject_decorator_1.injectDefinitions.get(Class);
+        const injectDef = this.getInjectDefinitions(Class);
         for (let paramType of injectDef.paramTypes) {
             dependencies.get(Class).push(paramType);
             this.getDependenciesClasses(paramType, dependencies, level + 1);

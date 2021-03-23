@@ -7,17 +7,17 @@ export declare class EmptyModule extends Service {
     stopped: boolean;
     userDeclarations: Array<any>;
     declareDefault: Array<any>;
-    init(): void;
+    static injectDefinitions: Map<Function, any>;
+    init(): Promise<void>;
     onInit(): void;
     setUserDeclarations(): void;
     declare(): Array<any>;
     parseUserDeclaration(userDeclaration: any): {
         Class: any;
         configHandler: any;
-        singleton: any;
     };
     getDeclarations(): Map<any, any>;
-    initSingletons(): void;
+    initSingletons(): Promise<void>;
     stop(reason?: string): void;
     stopSingletons(): void;
     handleShutdown(): void;

@@ -17,6 +17,7 @@ export class LoggerService extends Service
   {
     const actionLogger = this.provider.get<ActionLogger>(ActionLogger);
     actionLogger.options.action = name;
+    actionLogger.init();
 
     return actionLogger;
   }

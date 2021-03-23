@@ -21,6 +21,7 @@ let LoggerService = class LoggerService extends service_1.Service {
     action(name) {
         const actionLogger = this.provider.get(action_logger_service_1.ActionLogger);
         actionLogger.options.action = name;
+        actionLogger.init();
         return actionLogger;
     }
 };

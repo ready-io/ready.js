@@ -1,6 +1,5 @@
 import {injectDefinitions} from "../decorators/inject.decorator";
 import {Service, Inject} from "./service";
-import {EmptyModule} from "../empty-module";
 
 
 @Inject()
@@ -9,6 +8,7 @@ export class ProviderService extends Service
   protected instances = new Map();
   declarations = new Map();
   providers: Array<ProviderService> = [];
+  injectDefinitions = [injectDefinitions];
 
 
   onInit()
@@ -17,9 +17,42 @@ export class ProviderService extends Service
   }
 
 
+  getInjectDefinitions(Class: any): any
+  {
+    for (let injectDefinitions of this.injectDefinitions)
+    {
+      const injectDef = injectDefinitions.get(Class);
+
+      if (injectDef)
+      {
+        return injectDef;
+      }
+    }
+
+    throw new Error(`Inject definitions not found for ${Class.name}`);
+  }
+
+
+  add(Class: any)
+  {
+    if (Class.injectDefinitions)
+    {
+      this.injectDefinitions.push(Class.injectDefinitions);
+    }
+
+    const injectDef = this.getInjectDefinitions(Class);
+    const singleton = injectDef.options.singleton
+
+    if (singleton)
+    {
+      return this.get(Class);
+    }
+  }
+
+
   get<T=any>(Class: any): T
   {
-    const injectDef = injectDefinitions.get(Class);
+    const injectDef = this.getInjectDefinitions(Class);
     const singleton = injectDef.options.singleton
 
     if (singleton)
@@ -50,8 +83,6 @@ export class ProviderService extends Service
 
     const instance = this.instances.get(Class);
     instance.stop();
-
-    this.instances.delete(Class);
   }
 
 
@@ -85,7 +116,7 @@ export class ProviderService extends Service
       throw new Error(`${Class.name} not declared`);
     }
 
-    const injectDef = injectDefinitions.get(Class);
+    const injectDef = this.getInjectDefinitions(Class);
     let params      = [];
 
     for (let paramType of injectDef.paramTypes)
@@ -101,9 +132,7 @@ export class ProviderService extends Service
       configHandler(instance.options);
     }
 
-    instance.init();
-
-    if (instance instanceof EmptyModule)
+    if (Class.injectDefinitions)
     {
       this.providers.push(instance.provider);
     }
@@ -118,7 +147,7 @@ export class ProviderService extends Service
 
     dependencies.set(Class, []);
 
-    const injectDef = injectDefinitions.get(Class);
+    const injectDef = this.getInjectDefinitions(Class);
 
     for (let paramType of injectDef.paramTypes)
     {
@@ -138,4 +167,3 @@ export class ProviderService extends Service
     return dependenciesClasses;
   }
 }
-

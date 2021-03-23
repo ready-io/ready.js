@@ -1,4 +1,15 @@
-# 0.1.0
+# v0.1.1
+
+### Fixes:
+
+- Declarations of submodules are not available to parent modules
+- Singletons are not initialized in the order declared
+- logger not found on Module.onStop() after remove the singletons instances
+- Log errors on uncaughtException
+
+# v0.1.0
+
+### New:
 
 - First draft of the framework, implement Module, Service, Controller, @Inject with ProviderService and @Route with HttpService
 
@@ -19,7 +30,7 @@
 - The Logger accepts more than one message argument
 
 - Request parameters
-- docs
+- Docs
 
 
 
