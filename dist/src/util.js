@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.untilNotNull = exports.untilTrue = exports.untilNotEquals = exports.untilEquals = exports.untilCondition = exports.sleep = exports.HOURS = exports.HOUR = exports.MINUTES = exports.MINUTE = exports.SECONDS = exports.SECOND = void 0;
+exports.isObject = exports.mapToObj = exports.untilNotNull = exports.untilTrue = exports.untilNotEquals = exports.untilEquals = exports.untilCondition = exports.sleep = exports.HOURS = exports.HOUR = exports.MINUTES = exports.MINUTE = exports.SECONDS = exports.SECOND = void 0;
 exports.SECOND = 1000;
 exports.SECONDS = exports.SECOND;
 exports.MINUTE = 60 * exports.SECOND;
@@ -51,4 +51,35 @@ function untilNotNull(fun, timeout = 5000) {
     return untilNotEquals(null, fun, timeout);
 }
 exports.untilNotNull = untilNotNull;
+function mapToObj(input) {
+    if (input instanceof Map) {
+        let obj = {};
+        input.forEach(function (value, key) {
+            obj[key] = mapToObj(value);
+        });
+        return obj;
+    }
+    if (isObject(input)) {
+        let obj = {};
+        for (let key in input) {
+            let value = input[key];
+            obj[key] = mapToObj(value);
+        }
+        return obj;
+    }
+    if (Array.isArray(input)) {
+        let array = [];
+        for (let key in input) {
+            let value = input[key];
+            array.push(mapToObj(value));
+        }
+        return array;
+    }
+    return input;
+}
+exports.mapToObj = mapToObj;
+function isObject(o) {
+    return o instanceof Object && o.constructor === Object;
+}
+exports.isObject = isObject;
 //# sourceMappingURL=util.js.map

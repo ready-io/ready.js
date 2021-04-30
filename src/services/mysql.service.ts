@@ -88,7 +88,7 @@ export class MysqlService extends Service
   }
 
 
-  query(sql: string, values: Array<any> = [])
+  query(sql: string, values: Array<any> = []): Promise<Array<any>>
   {
     return new Promise((resolve, reject) =>
     {

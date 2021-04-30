@@ -70,3 +70,55 @@ export function untilNotNull(fun: () => any, timeout: number = 5000)
 {
   return untilNotEquals(null, fun, timeout);
 }
+
+
+export function mapToObj(input: any): any
+{
+  if (input instanceof Map)
+  {
+    let obj:any = {};
+
+    input.forEach(function(value, key){
+
+      obj[key] = mapToObj(value);
+    });
+
+    return obj;
+  }
+
+  if (isObject(input))
+  {
+    let obj:any = {};
+
+    for (let key in input)
+    {
+      let value = input[key];
+
+      obj[key] = mapToObj(value);
+    }
+
+    return obj;
+  }
+
+  if (Array.isArray(input))
+  {
+    let array = [];
+
+    for (let key in input)
+    {
+      let value = input[key];
+
+      array.push(mapToObj(value));
+    }
+
+    return array;
+  }
+
+  return input;
+}
+
+
+export function isObject(o: any)
+{
+  return o instanceof Object && o.constructor === Object;
+}

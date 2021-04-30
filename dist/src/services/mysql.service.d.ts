@@ -17,7 +17,7 @@ export declare class MysqlService extends Service {
     connect(): void;
     handleError(error: any): void;
     reconnect(): void;
-    query(sql: string, values?: Array<any>): Promise<unknown>;
+    query(sql: string, values?: Array<any>): Promise<Array<any>>;
     insert(table: string, row: any): Promise<unknown>;
     update(table: string, primary_key: string, key: string | number, row: any): Promise<unknown>;
 }

@@ -2,12 +2,13 @@ import express, {Express, Response} from 'express';
 import http, {Server} from 'http';
 import bodyParser from 'body-parser';
 import IO from 'socket.io';
-import IORedis from 'socket.io-redis';
+import {createAdapter} from 'socket.io-redis';
 import got from 'got';
 import {LoggerService} from '../logger/logger.service';
 import PromClient from 'prom-client';
 import {Subject} from 'rxjs';
 import {Service, ConfigHandler, Inject} from './service';
+import { RedisClient } from 'redis';
 
 
 type RouteHandlerFun = (params: any, res: Response, req: Request) => any;
@@ -131,7 +132,10 @@ export class HttpService extends Service
 
     if (options.redisHost && options.redisPort)
     {
-      this.io.adapter(IORedis({host: options.redisHost, port: options.redisPort}));
+      const pubClient = new RedisClient({ host: options.redisHost, port: options.redisPort });
+      const subClient = pubClient.duplicate();
+
+      this.io.adapter(createAdapter({ pubClient, subClient }));
     }
 
     log.info("Sockets server started");
