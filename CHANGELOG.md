@@ -1,3 +1,9 @@
+# V0.2.1
+
+### Security fixes:
+
+- Upgrade socket.io
+
 # v0.2.0
 
 ### New:

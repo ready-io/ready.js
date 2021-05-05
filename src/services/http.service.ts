@@ -1,7 +1,7 @@
 import express, {Express, Response} from 'express';
 import http, {Server} from 'http';
 import bodyParser from 'body-parser';
-import IO from 'socket.io';
+import {Server as IO}from 'socket.io';
 import {createAdapter} from 'socket.io-redis';
 import got from 'got';
 import {LoggerService} from '../logger/logger.service';
@@ -39,7 +39,7 @@ export class HttpService extends Service
   express: Express;
   server: Server = null;
   protected deferred: any = {};
-  io: IO.Server;
+  io: IO;
   PromClient = PromClient;
   protected metricsCollected = new Subject();
 
@@ -127,7 +127,7 @@ export class HttpService extends Service
     const log     = this.logger.action('HttpService.startSocketsServer');
     const options = this.options.socketsServer;
 
-    this.io = IO();
+    this.io = new IO();
     this.io.attach(this.server);
 
     if (options.redisHost && options.redisPort)

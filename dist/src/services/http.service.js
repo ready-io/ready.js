@@ -25,7 +25,7 @@ exports.HttpService = exports.HttpServiceOptions = void 0;
 const express_1 = __importDefault(require("express"));
 const http_1 = __importDefault(require("http"));
 const body_parser_1 = __importDefault(require("body-parser"));
-const socket_io_1 = __importDefault(require("socket.io"));
+const socket_io_1 = require("socket.io");
 const socket_io_redis_1 = require("socket.io-redis");
 const got_1 = __importDefault(require("got"));
 const logger_service_1 = require("../logger/logger.service");
@@ -109,7 +109,7 @@ let HttpService = class HttpService extends service_1.Service {
     startSocketsServer() {
         const log = this.logger.action('HttpService.startSocketsServer');
         const options = this.options.socketsServer;
-        this.io = socket_io_1.default();
+        this.io = new socket_io_1.Server();
         this.io.attach(this.server);
         if (options.redisHost && options.redisPort) {
             const pubClient = new redis_1.RedisClient({ host: options.redisHost, port: options.redisPort });

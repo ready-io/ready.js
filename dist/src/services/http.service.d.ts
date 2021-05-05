@@ -1,7 +1,7 @@
 /// <reference types="node" />
 import { Express, Response } from 'express';
 import { Server } from 'http';
-import IO from 'socket.io';
+import { Server as IO } from 'socket.io';
 import { LoggerService } from '../logger/logger.service';
 import PromClient from 'prom-client';
 import { Subject } from 'rxjs';
@@ -25,7 +25,7 @@ export declare class HttpService extends Service {
     express: Express;
     server: Server;
     protected deferred: any;
-    io: IO.Server;
+    io: IO;
     PromClient: typeof PromClient;
     protected metricsCollected: Subject<unknown>;
     constructor(logger: LoggerService);
