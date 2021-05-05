@@ -1,4 +1,4 @@
-import mysql, {Connection} from 'mysql';
+import mysql, {Connection, MysqlError} from 'mysql';
 import {SECONDS} from '../util';
 import {LoggerService} from '../logger/logger.service';
 import {Service, ConfigHandler, Inject} from './service';
@@ -13,6 +13,7 @@ export class MysqlServiceOptions
   user: string;
   password: string;
   database: string;
+  port: number = 3306;
 }
 
 
@@ -21,6 +22,7 @@ export class MysqlService extends Service
 {
   options = new MysqlServiceOptions();
   connection: Connection;
+  pingInterval: NodeJS.Timeout;
 
 
   constructor(public logger: LoggerService)
@@ -45,39 +47,56 @@ export class MysqlService extends Service
   {
     const log = this.logger.action('MysqlService.connect');
 
-    log.info('Connecting to mysql');
+    log.info('Connecting to MySQL');
+
+    clearInterval(this.pingInterval);
+
+    if (this.connection)
+    {
+      this.connection.destroy();
+    }
 
     this.connection = mysql.createConnection({
       host: this.options.host,
       user: this.options.user,
       password: this.options.password,
       database: this.options.database,
+      port: this.options.port,
     });
 
     this.connection.connect((error: Error) =>
     {
       if (error)
       {
-        log.error(`Cannot connect to mysql ${error.stack}`);
+        log.error(`Cannot connect to MySQL ${error.stack}`);
         this.reconnect()
         return;
       }
 
-      log.info('Connected to mysql');
+      this.startPingInterval();
+      log.info('Connected to MySQL');
     });
 
-    this.connection.on('error', (error: Error) => { this.handleError(error); });
+    this.connection.on('error', (error: MysqlError) => { this.handleError(error); });
   }
 
 
-  handleError(error: any)
+  handleError(error: MysqlError)
   {
     const log = this.logger.action('MysqlService.handleError');
 
     if (error.code === 'PROTOCOL_CONNECTION_LOST')
     {
-      log.error(`Mysql connection lost ${error.stack}`);
-      this.reconnect()
+      log.error(`MySQL connection lost ${error.stack}`);
+    }
+    else
+    {
+      log.error(error.stack);
+    }
+
+    if (error.fatal)
+    {
+      this.reconnect();
     }
   }
 
@@ -88,14 +107,34 @@ export class MysqlService extends Service
   }
 
 
+  startPingInterval()
+  {
+    this.pingInterval = setInterval(() =>
+    {
+      this.connection.ping((error) =>
+      {
+        const log = this.logger.action('MysqlService.ping');
+
+        log.silly('ping');
+
+        if (error)
+        {
+          this.handleError(error);
+        }
+      });
+    }, 60*SECONDS);
+  }
+
+
   query(sql: string, values: Array<any> = []): Promise<Array<any>>
   {
     return new Promise((resolve, reject) =>
     {
-      this.connection.query(sql, values, (error: Error, results: Array<any>, _fields: any) =>
+      this.connection.query(sql, values, (error: MysqlError, results: Array<any>, _fields: any) =>
       {
         if (error)
         {
+          this.handleError(error);
           reject(error);
           return;
         }
@@ -108,38 +147,12 @@ export class MysqlService extends Service
 
   insert(table: string, row: any)
   {
-    return new Promise((resolve, reject) =>
-    {
-      this.connection.query('INSERT INTO ?? SET ?', [table, row],
-        function (error: Error, results: any, _fields: any)
-      {
-        if (error)
-        {
-          reject(error);
-          return;
-        }
-
-        resolve(results);
-      });
-    });
+    return this.query('INSERT INTO ?? SET ?', [table, row]);
   }
 
 
   update(table: string, primary_key: string, key: string|number, row: any)
   {
-    return new Promise((resolve, reject) =>
-    {
-      this.connection.query('UPDATE ?? SET ? WHERE ??=?', [table, row, primary_key, key],
-        function (error: Error, results: any, _fields: any)
-      {
-        if (error)
-        {
-          reject(error);
-          return;
-        }
-
-        resolve(results);
-      });
-    });
+    return this.query('UPDATE ?? SET ? WHERE ??=?', [table, row, primary_key, key]);
   }
 }

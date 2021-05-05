@@ -11,10 +11,16 @@ class AppModule extends index_1.Module {
     declare() {
         return [
             index_2.LoggerModule.config(options => {
-                options.level = 'debug';
+                options.level = 'silly';
             }),
             index_3.HttpService.config(options => {
                 options.port = 3000;
+            }),
+            index_1.MysqlService.config(options => {
+                options.host = "localhost";
+                options.user = "test.user";
+                options.password = "123456";
+                options.database = "ready_db";
             }),
             app_controller_1.default,
         ];

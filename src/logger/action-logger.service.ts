@@ -48,6 +48,12 @@ export class ActionLogger extends Service
   }
 
 
+  http(...message: any)
+  {
+    this.log('http', ...message);
+  }
+
+
   verbose(...message: any)
   {
     this.log('verbose', ...message);
@@ -57,6 +63,12 @@ export class ActionLogger extends Service
   debug(...message: any)
   {
     this.log('debug', ...message);
+  }
+
+
+  silly(...message: any)
+  {
+    this.log('silly', ...message);
   }
 
 

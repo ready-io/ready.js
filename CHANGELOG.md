@@ -1,3 +1,17 @@
+# v0.2.0
+
+### New:
+
+- Improve MysqlService error handling
+- New logs level 'silly' and 'http' in LoggerModule
+- http() and silly() added to the ActionLoggerService 
+
+# v0.1.2
+
+### Security fixes:
+
+- Upgrade socket.io-redis
+
 # v0.1.1
 
 ### Fixes:

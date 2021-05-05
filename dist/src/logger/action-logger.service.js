@@ -43,11 +43,17 @@ let ActionLogger = class ActionLogger extends service_1.Service {
     info(...message) {
         this.log('info', ...message);
     }
+    http(...message) {
+        this.log('http', ...message);
+    }
     verbose(...message) {
         this.log('verbose', ...message);
     }
     debug(...message) {
         this.log('debug', ...message);
+    }
+    silly(...message) {
+        this.log('silly', ...message);
     }
     log(level, ...message) {
         let messageStr = "";

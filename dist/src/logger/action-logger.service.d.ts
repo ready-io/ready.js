@@ -14,7 +14,9 @@ export declare class ActionLogger extends Service {
     error(...message: any): void;
     warn(...message: any): void;
     info(...message: any): void;
+    http(...message: any): void;
     verbose(...message: any): void;
     debug(...message: any): void;
+    silly(...message: any): void;
     log(level: string, ...message: any): void;
 }
