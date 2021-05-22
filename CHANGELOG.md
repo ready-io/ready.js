@@ -1,3 +1,9 @@
+# V0.2.2
+
+### Security fixes:
+
+- Upgrade packages
+
 # V0.2.1
 
 ### Security fixes:
