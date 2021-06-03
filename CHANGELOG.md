@@ -1,3 +1,9 @@
+# V0.3.0
+
+### New:
+
+- Option cors in SocketsServerOptions
+
 # V0.2.3
 
 ### Security fixes:

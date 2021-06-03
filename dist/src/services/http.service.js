@@ -36,6 +36,7 @@ const redis_1 = require("redis");
 class SocketsServerOptions {
     constructor() {
         this.enabled = false;
+        this.cors = null;
     }
 }
 class HttpServiceOptions {
@@ -109,7 +110,11 @@ let HttpService = class HttpService extends service_1.Service {
     startSocketsServer() {
         const log = this.logger.action('HttpService.startSocketsServer');
         const options = this.options.socketsServer;
-        this.io = new socket_io_1.Server();
+        const ioOptions = {};
+        if (options.cors !== null) {
+            ioOptions.cors = options.cors;
+        }
+        this.io = new socket_io_1.Server(ioOptions);
         this.io.attach(this.server);
         if (options.redisHost && options.redisPort) {
             const pubClient = new redis_1.RedisClient({ host: options.redisHost, port: options.redisPort });

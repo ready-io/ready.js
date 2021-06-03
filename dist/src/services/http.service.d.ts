@@ -12,6 +12,9 @@ declare class SocketsServerOptions {
     enabled: boolean;
     redisHost: string;
     redisPort: number;
+    cors: {
+        origin: string;
+    };
 }
 export declare class HttpServiceOptions {
     port: number;

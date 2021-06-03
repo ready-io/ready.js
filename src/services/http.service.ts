@@ -1,7 +1,7 @@
 import express, {Express, Response} from 'express';
 import http, {Server} from 'http';
 import bodyParser from 'body-parser';
-import {Server as IO}from 'socket.io';
+import {Server as IO, ServerOptions}from 'socket.io';
 import {createAdapter} from 'socket.io-redis';
 import got from 'got';
 import {LoggerService} from '../logger/logger.service';
@@ -20,6 +20,7 @@ class SocketsServerOptions
   enabled = false;
   redisHost: string;
   redisPort: number;
+  cors: {origin: string} = null;
 }
 
 
@@ -127,7 +128,14 @@ export class HttpService extends Service
     const log     = this.logger.action('HttpService.startSocketsServer');
     const options = this.options.socketsServer;
 
-    this.io = new IO();
+    const ioOptions: Partial<ServerOptions> = {};
+
+    if (options.cors !== null)
+    {
+      ioOptions.cors = options.cors;
+    }
+
+    this.io = new IO(ioOptions);
     this.io.attach(this.server);
 
     if (options.redisHost && options.redisPort)
