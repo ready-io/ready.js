@@ -1,3 +1,9 @@
+# V0.3.1
+
+### Security fixes:
+
+- Potential vulnerabilities in dependencies
+
 # V0.3.0
 
 ### New:
