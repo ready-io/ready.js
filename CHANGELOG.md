@@ -1,3 +1,9 @@
+# V0.3.2
+
+### Fixes:
+
+- Wrong type HttpService.debounce() callback parameter
+ 
 # V0.3.1
 
 ### Security fixes:

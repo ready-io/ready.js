@@ -236,7 +236,7 @@ export class HttpService extends Service
   }
 
 
-  debounce(id: string, timeout: number, callback: () => {})
+  debounce(id: string, timeout: number, callback: () => void)
   {
     if (typeof(this.deferred[id]) != 'undefined') return;
 

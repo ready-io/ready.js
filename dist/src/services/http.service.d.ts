@@ -38,7 +38,7 @@ export declare class HttpService extends Service {
     startSocketsServer(): void;
     onStop(): void;
     route(route: string, handler: RouteHandler): void;
-    debounce(id: string, timeout: number, callback: () => {}): void;
+    debounce(id: string, timeout: number, callback: () => void): void;
     get(url: string, params: any): import("got/dist/source").CancelableRequest<unknown>;
     post(url: string, params: any): import("got/dist/source").CancelableRequest<unknown>;
     onMetricsCollected(callback: () => void): void;
