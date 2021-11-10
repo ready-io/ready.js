@@ -41,7 +41,7 @@ let LoggerModule = class LoggerModule extends empty_module_1.EmptyModule {
     }
 };
 LoggerModule = __decorate([
-    service_1.Inject()
+    (0, service_1.Inject)()
 ], LoggerModule);
 exports.LoggerModule = LoggerModule;
 //# sourceMappingURL=logger.module.js.map

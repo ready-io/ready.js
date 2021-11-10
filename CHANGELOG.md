@@ -1,3 +1,9 @@
+# V0.3.3
+
+### Fixes:
+
+- Outdated dependencies
+
 # V0.3.2
 
 ### Fixes:

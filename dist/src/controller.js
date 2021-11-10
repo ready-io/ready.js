@@ -30,7 +30,7 @@ let Controller = class Controller extends service_1.Service {
     }
 };
 Controller = __decorate([
-    service_1.Inject(),
+    (0, service_1.Inject)(),
     __metadata("design:paramtypes", [http_service_1.HttpService])
 ], Controller);
 exports.Controller = Controller;

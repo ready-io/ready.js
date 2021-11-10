@@ -26,7 +26,7 @@ let LoggerService = class LoggerService extends service_1.Service {
     }
 };
 LoggerService = __decorate([
-    service_1.Inject(),
+    (0, service_1.Inject)(),
     __metadata("design:paramtypes", [provider_service_1.ProviderService])
 ], LoggerService);
 exports.LoggerService = LoggerService;

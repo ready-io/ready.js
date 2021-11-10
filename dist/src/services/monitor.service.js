@@ -17,7 +17,7 @@ let MonitorService = class MonitorService extends service_1.Service {
     }
 };
 MonitorService = __decorate([
-    service_1.Inject()
+    (0, service_1.Inject)()
 ], MonitorService);
 exports.MonitorService = MonitorService;
 //# sourceMappingURL=monitor.service.js.map

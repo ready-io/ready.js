@@ -16,13 +16,13 @@ let HelloController = class HelloController extends index_1.Controller {
     }
 };
 __decorate([
-    index_1.Route('/hello'),
+    (0, index_1.Route)('/hello'),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", void 0)
 ], HelloController.prototype, "hello", null);
 HelloController = __decorate([
-    index_1.Inject()
+    (0, index_1.Inject)()
 ], HelloController);
 exports.default = HelloController;
 //# sourceMappingURL=hello.controller.js.map

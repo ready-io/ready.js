@@ -107,7 +107,7 @@ let MysqlService = class MysqlService extends service_1.Service {
     }
 };
 MysqlService = __decorate([
-    service_1.Inject(),
+    (0, service_1.Inject)(),
     __metadata("design:paramtypes", [logger_service_1.LoggerService])
 ], MysqlService);
 exports.MysqlService = MysqlService;

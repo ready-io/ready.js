@@ -113,7 +113,7 @@ let ProviderService = ProviderService_1 = class ProviderService extends service_
     }
 };
 ProviderService = ProviderService_1 = __decorate([
-    service_1.Inject()
+    (0, service_1.Inject)()
 ], ProviderService);
 exports.ProviderService = ProviderService;
 //# sourceMappingURL=provider.service.js.map

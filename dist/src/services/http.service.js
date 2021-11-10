@@ -63,7 +63,7 @@ let HttpService = class HttpService extends service_1.Service {
     }
     onInit() {
         const log = this.logger.action('HttpService.start');
-        this.express = express_1.default();
+        this.express = (0, express_1.default)();
         // set up http server
         this.server = http_1.default.createServer(this.express);
         this.server.listen(this.options.port);
@@ -119,7 +119,7 @@ let HttpService = class HttpService extends service_1.Service {
         if (options.redisHost && options.redisPort) {
             const pubClient = new redis_1.RedisClient({ host: options.redisHost, port: options.redisPort });
             const subClient = pubClient.duplicate();
-            this.io.adapter(socket_io_redis_1.createAdapter({ pubClient, subClient }));
+            this.io.adapter((0, socket_io_redis_1.createAdapter)({ pubClient, subClient }));
         }
         log.info("Sockets server started");
     }
@@ -199,7 +199,7 @@ let HttpService = class HttpService extends service_1.Service {
             params_str = params_arr.length ? "?" + params_arr.join('&') : "";
         }
         const got_url = `http://${this.options.host}${url}${params_str}`;
-        return got_1.default(got_url).json();
+        return (0, got_1.default)(got_url).json();
     }
     post(url, params) {
         params.token = this.options.token;
@@ -211,7 +211,7 @@ let HttpService = class HttpService extends service_1.Service {
     }
 };
 HttpService = __decorate([
-    service_1.Inject(),
+    (0, service_1.Inject)(),
     __metadata("design:paramtypes", [logger_service_1.LoggerService])
 ], HttpService);
 exports.HttpService = HttpService;

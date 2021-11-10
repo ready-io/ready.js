@@ -39,8 +39,8 @@ export declare class HttpService extends Service {
     onStop(): void;
     route(route: string, handler: RouteHandler): void;
     debounce(id: string, timeout: number, callback: () => void): void;
-    get(url: string, params: any): import("got/dist/source").CancelableRequest<unknown>;
-    post(url: string, params: any): import("got/dist/source").CancelableRequest<unknown>;
+    get(url: string, params: any): import("got").CancelableRequest<unknown>;
+    post(url: string, params: any): import("got").CancelableRequest<unknown>;
     onMetricsCollected(callback: () => void): void;
 }
 export {};

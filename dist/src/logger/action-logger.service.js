@@ -19,7 +19,7 @@ const monitor_service_1 = require("../services/monitor.service");
 const service_1 = require("../services/service");
 class ActionLoggerOptions {
     constructor() {
-        this.timestamp = moment_1.default().format('x');
+        this.timestamp = (0, moment_1.default)().format('x');
         this.action = 'unknown';
     }
 }
@@ -67,17 +67,17 @@ let ActionLogger = class ActionLogger extends service_1.Service {
             }
         }
         this.logger.log({
-            timestamp: moment_1.default(+this.options.timestamp).format('YYYY-MM-DD HH:mm:ss.SSS'),
+            timestamp: (0, moment_1.default)(+this.options.timestamp).format('YYYY-MM-DD HH:mm:ss.SSS'),
             memory: `${this.monitor.getMemoryUsage()}MB`,
             level: level,
             message: messageStr,
             action: this.options.action,
-            duration: `${(+moment_1.default().format('x')) - (+this.options.timestamp)}ms`
+            duration: `${(+(0, moment_1.default)().format('x')) - (+this.options.timestamp)}ms`
         });
     }
 };
 ActionLogger = __decorate([
-    service_1.Inject({ singleton: false }),
+    (0, service_1.Inject)({ singleton: false }),
     __metadata("design:paramtypes", [logger_1.Logger,
         monitor_service_1.MonitorService])
 ], ActionLogger);

@@ -40,19 +40,19 @@ let MetricsController = class MetricsController extends index_3.Controller {
     }
 };
 __decorate([
-    index_3.Route('/bar'),
+    (0, index_3.Route)('/bar'),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", void 0)
 ], MetricsController.prototype, "bar", null);
 __decorate([
-    index_3.Route('/foo'),
+    (0, index_3.Route)('/foo'),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", void 0)
 ], MetricsController.prototype, "foo", null);
 MetricsController = __decorate([
-    index_3.Inject(),
+    (0, index_3.Inject)(),
     __metadata("design:paramtypes", [index_2.HttpService,
         index_1.LoggerService])
 ], MetricsController);

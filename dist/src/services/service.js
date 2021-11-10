@@ -25,7 +25,7 @@ let Service = class Service {
     }
 };
 Service = __decorate([
-    exports.Inject()
+    (0, exports.Inject)()
 ], Service);
 exports.Service = Service;
 //# sourceMappingURL=service.js.map

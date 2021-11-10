@@ -42,19 +42,19 @@ let AppController = class AppController extends index_3.Controller {
     }
 };
 __decorate([
-    index_3.Route('/bar'),
+    (0, index_3.Route)('/bar'),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", Promise)
 ], AppController.prototype, "bar", null);
 __decorate([
-    index_3.Route('/foo'),
+    (0, index_3.Route)('/foo'),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", void 0)
 ], AppController.prototype, "foo", null);
 AppController = __decorate([
-    index_3.Inject(),
+    (0, index_3.Inject)(),
     __metadata("design:paramtypes", [index_2.HttpService,
         index_1.LoggerService,
         index_1.MysqlService])
