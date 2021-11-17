@@ -1,3 +1,10 @@
+# V0.4.2
+
+### Fixes:
+
+- Remove option redisDb
+- Pass option redisPrefix to the socket.io Redis adapter
+
 # V0.4.1
 
 ### Fixes:

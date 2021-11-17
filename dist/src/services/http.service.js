@@ -26,7 +26,7 @@ const express_1 = __importDefault(require("express"));
 const http_1 = __importDefault(require("http"));
 const body_parser_1 = __importDefault(require("body-parser"));
 const socket_io_1 = require("socket.io");
-const socket_io_redis_1 = require("socket.io-redis");
+const redis_adapter_1 = require("@socket.io/redis-adapter");
 const got_1 = __importDefault(require("got"));
 const logger_service_1 = require("../logger/logger.service");
 const prom_client_1 = __importDefault(require("prom-client"));
@@ -36,7 +36,6 @@ const redis_1 = require("redis");
 class SocketsServerOptions {
     constructor() {
         this.enabled = false;
-        this.redisDb = null;
         this.redisPrefix = null;
         this.cors = null;
     }
@@ -123,15 +122,13 @@ let HttpService = class HttpService extends service_1.Service {
                 host: options.redisHost,
                 port: options.redisPort,
             };
-            if (options.redisDb !== null) {
-                clientOptions.db = options.redisDb;
-            }
-            if (options.redisPrefix !== null) {
-                clientOptions.prefix = options.redisPrefix;
-            }
             const pubClient = new redis_1.RedisClient(clientOptions);
             const subClient = pubClient.duplicate();
-            this.io.adapter((0, socket_io_redis_1.createAdapter)({ pubClient, subClient }));
+            const adapterOptions = {};
+            if (options.redisPrefix !== null) {
+                adapterOptions.key = options.redisPrefix;
+            }
+            this.io.adapter((0, redis_adapter_1.createAdapter)(pubClient, subClient, adapterOptions));
         }
         log.info("Sockets server started");
     }

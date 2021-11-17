@@ -2,7 +2,7 @@ import express, {Express, Response} from 'express';
 import http, {Server} from 'http';
 import bodyParser from 'body-parser';
 import {Server as IO, ServerOptions}from 'socket.io';
-import {createAdapter} from 'socket.io-redis';
+import { createAdapter, RedisAdapterOptions } from '@socket.io/redis-adapter';
 import got from 'got';
 import {LoggerService} from '../logger/logger.service';
 import PromClient from 'prom-client';
@@ -20,7 +20,6 @@ class SocketsServerOptions
   enabled = false;
   redisHost: string;
   redisPort: number;
-  redisDb: number = null;
   redisPrefix: string = null;
   cors: {origin: string} = null;
 }
@@ -147,20 +146,17 @@ export class HttpService extends Service
         port: options.redisPort,
       };
 
-      if (options.redisDb !== null)
-      {
-        clientOptions.db = options.redisDb;
-      }
-
-      if (options.redisPrefix !== null)
-      {
-        clientOptions.prefix = options.redisPrefix;
-      }
-
       const pubClient = new RedisClient(clientOptions);
       const subClient = pubClient.duplicate();
 
-      this.io.adapter(createAdapter({ pubClient, subClient }));
+      const adapterOptions: Partial<RedisAdapterOptions> = {};
+
+      if (options.redisPrefix !== null)
+      {
+        adapterOptions.key = options.redisPrefix;
+      }
+
+      this.io.adapter(createAdapter(pubClient, subClient, adapterOptions));
     }
 
     log.info("Sockets server started");
