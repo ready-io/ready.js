@@ -119,12 +119,17 @@ let HttpService = class HttpService extends service_1.Service {
         this.io = new socket_io_1.Server(ioOptions);
         this.io.attach(this.server);
         if (options.redisHost && options.redisPort) {
-            const pubClient = new redis_1.RedisClient({
+            const clientOptions = {
                 host: options.redisHost,
                 port: options.redisPort,
-                db: options.redisDb,
-                prefix: options.redisPrefix,
-            });
+            };
+            if (options.redisDb !== null) {
+                clientOptions.db = options.redisDb;
+            }
+            if (options.redisPrefix !== null) {
+                clientOptions.prefix = options.redisPrefix;
+            }
+            const pubClient = new redis_1.RedisClient(clientOptions);
             const subClient = pubClient.duplicate();
             this.io.adapter((0, socket_io_redis_1.createAdapter)({ pubClient, subClient }));
         }

@@ -1,3 +1,9 @@
+# V0.4.1
+
+### Fixes:
+
+- Avoid pass the redisDb option if it is not setted
+
 # V0.4.0
 
 ### New:

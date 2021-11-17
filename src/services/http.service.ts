@@ -8,7 +8,7 @@ import {LoggerService} from '../logger/logger.service';
 import PromClient from 'prom-client';
 import {Subject} from 'rxjs';
 import {Service, ConfigHandler, Inject} from './service';
-import { RedisClient } from 'redis';
+import { ClientOpts, RedisClient } from 'redis';
 
 
 type RouteHandlerFun = (params: any, res: Response, req: Request) => any;
@@ -142,12 +142,22 @@ export class HttpService extends Service
 
     if (options.redisHost && options.redisPort)
     {
-      const pubClient = new RedisClient({
+      const clientOptions: ClientOpts = {
         host: options.redisHost,
         port: options.redisPort,
-        db: options.redisDb,
-        prefix: options.redisPrefix,
-      });
+      };
+
+      if (options.redisDb !== null)
+      {
+        clientOptions.db = options.redisDb;
+      }
+
+      if (options.redisPrefix !== null)
+      {
+        clientOptions.prefix = options.redisPrefix;
+      }
+
+      const pubClient = new RedisClient(clientOptions);
       const subClient = pubClient.duplicate();
 
       this.io.adapter(createAdapter({ pubClient, subClient }));
