@@ -1,3 +1,9 @@
+# V0.4.0
+
+### New:
+
+- New options for the SocketsServerOptions: redisDb and redisPrefix
+
 # V0.3.3
 
 ### Fixes:

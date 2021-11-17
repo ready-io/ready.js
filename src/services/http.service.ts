@@ -20,6 +20,8 @@ class SocketsServerOptions
   enabled = false;
   redisHost: string;
   redisPort: number;
+  redisDb: number = null;
+  redisPrefix: string = null;
   cors: {origin: string} = null;
 }
 
@@ -140,7 +142,12 @@ export class HttpService extends Service
 
     if (options.redisHost && options.redisPort)
     {
-      const pubClient = new RedisClient({ host: options.redisHost, port: options.redisPort });
+      const pubClient = new RedisClient({
+        host: options.redisHost,
+        port: options.redisPort,
+        db: options.redisDb,
+        prefix: options.redisPrefix,
+      });
       const subClient = pubClient.duplicate();
 
       this.io.adapter(createAdapter({ pubClient, subClient }));

@@ -12,6 +12,8 @@ declare class SocketsServerOptions {
     enabled: boolean;
     redisHost: string;
     redisPort: number;
+    redisDb: number;
+    redisPrefix: string;
     cors: {
         origin: string;
     };
