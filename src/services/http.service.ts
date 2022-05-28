@@ -111,7 +111,7 @@ export class HttpService extends Service
 
         if (collect)
         {
-          this.metricsCollected.next();
+          this.metricsCollected.next(undefined);
         }
       }
       catch (ex)
